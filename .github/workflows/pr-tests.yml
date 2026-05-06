@@ -38,12 +38,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'npm'
+          cache-dependency-path: test-repo/package-lock.json
 
-      - name: Install Playwright and dependencies
+      - name: Install npm dependencies
         working-directory: ./test-repo
-        run: |
-          npm ci
-          npx playwright install --with-deps
+        run: npm ci
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('test-repo/package-lock.json') }}
+
+      - name: Install Playwright Browsers
+        working-directory: ./test-repo
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium --with-deps
+
+      - name: Install Playwright OS Dependencies
+        working-directory: ./test-repo
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Run Playwright tests
         working-directory: ./test-repo
