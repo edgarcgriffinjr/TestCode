@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; text-align: center; }
+        .success-msg { color: #28a745; margin-bottom: 20px; }
+        a { text-decoration: none; color: #007bff; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="success-msg">Success!</h2>
+    <p>Thank you, <strong th:text="${user.name}"></strong>!</p>
+    <p>We received your email address: <strong th:text="${user.email}"></strong></p>
+    <br/>
+    <a href="/">Go Back</a>
+</div>
+</body>
+</html>
