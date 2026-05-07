@@ -39,27 +39,14 @@ jobs:
           nohup java -jar target/demo-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
           timeout 60 bash -c 'until curl -s http://localhost:8080 > /dev/null; do sleep 1; done'
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: test-repo/package-lock.json
-
-      - name: Install npm dependencies
-        working-directory: ./test-repo
-        run: npm ci
-
       - name: Run Playwright tests
         working-directory: ./test-repo
-        run: npx playwright test
+        run: mvn clean test
 
-      - name: Upload Playwright Report
+      - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: |
-            test-repo/playwright-report/
-            test-repo/test-results/
+          name: surefire-report
+          path: test-repo/target/surefire-reports/
           retention-days: 7
